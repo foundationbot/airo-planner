@@ -1,0 +1,1568 @@
+<?xml version = "1.0" ?>
+<robot name="Alex">
+
+	<link name="Pelvis">
+		<inertial>
+			<mass value="4.074"/>
+			<origin rpy="0 0 0" xyz="-0.010295 -0.001599 0.056458"/>
+			<inertia ixx="0.010219858" ixy="-0.00012501" ixz="-0.001101619" iyy="0.015397437" iyz="-0.000162984" izz="0.015996955" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/ALX02_02_A01_BaseLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+	
+	<!-- Pelvis IMU -->
+	<link name="PelvisIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="PelvisIMUJoint" type="fixed">
+		<origin xyz="-0.08544739 -0.01922816 0.05317309" rpy="0.0 0.0 0.0"/>
+		<axis xyz="0 0 1"/>
+		<parent link="Pelvis"/>
+		<child link="PelvisIMULink"/>
+	</joint>
+	<gazebo reference="PelvisIMULink">
+		<sensor name="PelvisIMU" type="imu">
+			<always_on>true</always_on>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+	
+	<!-- Spine Joints -->
+	<joint name="SpineYaw" type="fixed">
+		<origin rpy="0 0 0" xyz="0 0 0.1045" />
+		<axis xyz="0 0 1" />
+		<parent link="Pelvis" />
+		<child link="SpineYawLink" />
+		<limit effort="150" lower="-1.0472" upper="1.0472" velocity = "9.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+    </joint>
+
+	<joint name="SpineRoll" type="revolute">
+		<origin rpy="0 0 0" xyz="-0.015 0 0.0528" />
+		<axis xyz="1 0 0" />
+		<parent link="SpineYawLink" />
+		<child link="SpineRollLink" />
+		<limit effort="150.0" lower="-0.436332" upper="0.436332" velocity = "6.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="SpinePitch" type="revolute">
+		<origin rpy="0 0 0" xyz="0 0 0.035" />
+		<axis xyz="0 1 0" />
+		<parent link="SpineRollLink" />
+		<child link="Torso" />
+		<limit effort="250.0" lower="-0.523599" upper="0.785398" velocity = "6.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- Spine Links -->
+	<link name="SpineYawLink">
+		<inertial>
+			<mass value="1.839"/>
+			<origin rpy="0 0 0" xyz="0.00785 0.001802 0.030654"/>
+			<inertia ixx="0.005450626" ixy="0.000208526" ixz="-0.001171705" iyy="0.007137808" iyz="0.000116812" izz="0.006970545"/>
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/ALX02_02_A04_BaseDiffLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="SpineRollLink">
+		<inertial>
+			<mass value="0.235"/>
+			<origin rpy="0 0 0" xyz="0.000674 0.000626 0.018996"/>
+			<inertia ixx="0.000188204" ixy="0.000000058" ixz="0.000002065" iyy="0.000148152" iyz="-0.000002403" izz="0.000195223"/>
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/ALX02_02_A05_UJointLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<!-- Torso Link -->
+	<link name="Torso">
+		<inertial>
+			<mass value="17.574"/>
+			<origin rpy="0 0 0" xyz="0.003673 0.000059 0.160289"/>
+			<inertia ixx="0.24725248" ixy="-0.000080922" ixz="0.000927935" iyy="0.158680043" iyz="0.000328726" izz="0.153487995"/>
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/ALX02_02_A06_TorsoLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<!-- TORSO IMU's NOTE: The torso IMUs are redundant-->
+	<!-- Torso Left IMU. Currently not used for anything-->
+	<link name="TorsoLeftIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="TorsoLeftIMUJoint" type="fixed">
+		<origin rpy="1.5707963267948966 -0.6981317007977316 1.5707963267948961" xyz="0.07978495 0.10932294 0.17623744"/>
+		<axis xyz="0 0 1"/>
+		<parent link="Torso"/>
+		<child link="TorsoLeftIMULink"/>
+	</joint>
+	<gazebo reference="TorsoLeftIMULink">
+		<sensor name="TorsoLeftIMU" type="imu">
+			<always_on>true</always_on>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Torso Right IMU. Currently not used for anything-->
+	<link name="TorsoRightIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="TorsoRightIMUJoint" type="fixed">
+		<origin rpy="1.5707963267948966 0.6981317007977319 1.5707963267948966" xyz="0.07978495 -0.09055680 0.16048643"/>
+		<axis xyz="0 0 1"/>
+		<parent link="Torso"/>
+		<child link="TorsoRightIMULink"/>
+	</joint>
+	<gazebo reference="TorsoRightIMULink">
+		<sensor name="TorsoRightIMU" type="imu">
+			<always_on>true</always_on>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- TorsoIMULink-->
+	<!-- this is an IMU on top of the Neck yaw motor controller board-->
+	<link name="TorsoIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="TorsoIMUJoint" type="fixed">
+		<origin rpy="0 0 -1.5707963267948966" xyz="0.00399725 -0.01225021 0.24512039"/>
+		<axis xyz="0 0 1"/>
+		<parent link="Torso"/>
+		<child link="TorsoIMULink"/>
+	</joint>
+	<gazebo reference="TorsoIMULink">
+		<sensor name="TorsoIMU" type="imu">
+			<always_on>true</always_on>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Neck Joints -->
+	<joint name="NeckYaw" type="revolute">
+		<origin rpy="0 0 0" xyz="0 0 0.307953" /> <!-- placeholder for the joint location -->
+		<axis xyz="0 0 1" />
+		<parent link="Torso" />
+		<child link="NeckYawLink" />
+		<limit effort="20" lower="-1.5708" upper="1.5708" velocity = "20" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="NeckPitch" type="revolute">
+		<origin rpy="0 0 0" xyz="0.025 0.01 0.207252" />
+		<axis xyz="0 1 0" />
+		<parent link="NeckYawLink" />
+		<child link="Head" />
+		<limit effort="20" lower="-0.49524" upper="0.48023" velocity = "20" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!--	 Neck and Head -->
+	<!--	 Inertia data is a placeholder -->
+	<link name="NeckYawLink">
+		<inertial>
+			<mass value="1.141"/>
+			<origin rpy="0 0 0" xyz="0.007143 0.006943 0.109823"/>
+			<inertia ixx="0.007475898" ixy="-0.000075723" ixz="-0.000745362" iyy="0.007407578" iyz="-0.000436948" izz="0.00109269" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/ALX02_01_A03_NeckLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="Head">
+		<inertial>
+			<mass value="1.677"/>
+			<origin rpy="0 0 0" xyz="0.03237 -0.013568 0.007163"/>
+			<inertia ixx="0.006026191" ixy="-0.000197484" ixz="0.001813659" iyy="0.008182071" iyz="-0.000042529" izz="0.00644909"/>
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/ALX02_01_A02_HeadLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<!-- LEFT ARM -->
+	<!-- left upper arm joints -->
+	<joint name="LeftShoulderPitch" type="revolute">
+		<origin xyz="0 0.10337060 0.21502827" rpy="0.698132 0.0 0.0"   />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="Torso" />
+		<child link="LeftShoulderPitchLink" />
+		<limit effort="150.0" lower="-3.141592" upper="1.22173" velocity = "9.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="LeftShoulderRoll" type="revolute">
+		<origin rpy="-0.698132 0.0 0.0" xyz="0.0 0.15676000 -0.01300000" />
+		<axis xyz="1 0 0" />
+		<parent link="LeftShoulderPitchLink" />
+		<child link="LeftShoulderRollLink" />
+		<limit effort="150.0" lower="-0.349066" upper="2.79253" velocity = "9.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="LeftShoulderYaw" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.035 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="LeftShoulderRollLink" />
+		<child link="LeftShoulderYawLink" />
+		<limit effort="80.0" lower="-1.91986" upper="1.22173" velocity = "11.5" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="LeftElbowPitch" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.015 0.0 -0.3127" />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="LeftShoulderYawLink" />
+		<child link="LeftElbowPitchLink" />
+		<limit effort="80.0" lower="-2.35619" upper="0.174532925" velocity = "11.5" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- left wrist joints -->
+	<joint name="LeftWristYaw" type="revolute">
+		<origin xyz="-0.015 0.0 0.0" rpy="0.0 0.0 0.0"   />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="LeftElbowPitchLink" />
+		<child link="LeftWristYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="LeftWristRoll" type="revolute">
+		<origin xyz="0.0 -0.013 -0.25" rpy="0.0 0.0 0.0"/>
+		<axis xyz="1 0 0" />
+		<parent link="LeftWristYawLink" />
+		<child link="LeftWristRollLink" />
+		<limit effort="20.0" lower="-1.8326" upper="0.610865" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="LeftGripperYaw" type="revolute">
+		<origin xyz="0.0 0.013 -0.031" rpy="0.0 0.0 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="LeftWristRollLink" />
+		<child link="LeftGripperYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- left upper arm links -->
+	<link name="LeftShoulderPitchLink">
+		<inertial>
+			<mass value="2.99"/>
+			<origin
+					rpy="0 0 0"
+					xyz="-0.00264 0.12135 -0.006824"/>
+			<inertia ixx="0.0111046" ixy="0.0002882" ixz="-0.000054" iyy="0.0051699" iyz="0.0009318" izz="0.01176" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftShoulderPitchLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="LeftShoulderRollLink">
+		<inertial>
+			<mass value="0.972"/>
+			<origin
+					rpy="0 0 0"
+					xyz="0.01251711 0.0188309 -0.03849849"/>
+			<inertia ixx="0.0029485" ixy="0.0001386" ixz="-0.0003345" iyy="0.0023587" iyz="0.0005255" izz="0.0014366" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftShoulderRollLink_shortBicep.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="LeftShoulderYawLink">
+		<inertial>
+			<mass value="2.91"/>
+			<origin
+					rpy="0 0 0"
+					xyz="0.00510403 0.00314332 -0.21695413"/>
+			<inertia ixx="0.0267829" ixy="-0.000011" ixz="0.0015998" iyy="0.0265514" iyz="0.0004426" izz="0.003052" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftShoulderYawLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0867"/>
+		</visual>
+	</link>
+
+	<!-- left wrist links -->
+	<link name="LeftElbowPitchLink">
+		<inertial>
+			<mass value="0.45"/>
+			<origin
+					rpy="0 0 0"
+					xyz="-0.01180322 -0.0035763 -0.04946747"/>
+
+			<inertia ixx="0.0007362" ixy="-0.0000088" ixz="-0.0000292" iyy="0.0006567" iyz="0.0001499" izz="0.0004897" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftElbowPitchLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="LeftWristYawLink">
+		<inertial>
+			<mass value="1.547"/> <!-- This is a measured value. Refer to https://docs.google.com/spreadsheets/d/1VXWFJk3VJUsfkHrDaytB2INq94un1KytIOzcKJD0p44/edit?gid=0#gid=0  -->
+			<origin
+					rpy="0 0 0"
+					xyz="-0.00263832 -0.00050534 -0.13018376"/>
+
+			<inertia ixx="0.0037869" ixy="0.0000163" ixz="-0.0000252" iyy="0.004071" iyz="-0.0000924" izz="0.0015203" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftWristYawLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+
+	<link name="LeftWristRollLink">
+		<inertial>
+			<mass value="0.909"/> <!-- This is a measured value. Refer to https://docs.google.com/spreadsheets/d/1VXWFJk3VJUsfkHrDaytB2INq94un1KytIOzcKJD0p44/edit?gid=0#gid=0  -->
+			<origin
+					rpy="0 0 0"
+					xyz="0.00004053 0.01038395 0.00035532"/>
+
+			<inertia ixx="0.000477" ixy="-0.0000079" ixz="-0.0000097" iyy="0.0004902" iyz="-0.0000008" izz="0.000514" />
+		</inertial>
+
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftWristRollLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+
+	<link name="LeftGripperYawLink">
+		<inertial>
+			<mass value="0.251"/>
+			<origin
+					rpy="0 0 0"
+					xyz="-0.000217 -0.000349 0.009761"/>
+			<inertia ixx="0.0000722" ixy="-0.0000016" ixz="-0.0000037" iyy="0.0000747" iyz="0.0000004" izz="0.0000324" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/LeftGripperYawLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<!-- LEFT ARM IMU's -->
+	<!-- Left Shoulder Pitch IMU Information -->
+	<link name="LeftShoulderPitchIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="LeftShoulderPitchIMUJoint" type="fixed">
+		<origin rpy="-3.141592 0 -1.57079632679" xyz="0.01432621 0.0755071 -0.00245783"/>
+		<axis xyz="0 0 1"/>
+		<parent link="LeftShoulderPitchLink"/>
+		<child link="LeftShoulderPitchIMULink"/>
+	</joint>
+	<gazebo reference="LeftShoulderPitchIMULink">
+		<sensor name="LeftShoulderPitchIMU" type="imu">
+			<always_on>true</always_on>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Left ShoulderYaw IMU Note: in CAD this is the left bicep IMU -->
+	<link name="LeftShoulderYawIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="LeftShoulderYawIMUJoint" type="fixed">
+		<origin rpy="1.570796 3.1415926 -0.314159" xyz="-0.00633723 -0.00669505 -0.19881468"/>
+		<axis xyz="0 0 1"/>
+		<parent link="LeftShoulderYawLink"/>
+		<child link="LeftShoulderYawIMULink"/>
+	</joint>
+	<gazebo reference="LeftShoulderYawIMULink">
+		<sensor name="LeftShoulderYawIMU" type="imu">
+			<always_on>true</always_on>
+			<pose>0 0 0 0 0 0</pose>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Left Wrist Yaw IMU Note: in CAD this is the left bicep IMU -->
+	<link name="LeftWristYawIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+
+	<joint name="LeftWristYawIMUJoint" type="fixed">
+		<origin rpy="1.571  0.0 1.571" xyz="-0.048986 0.011658 -0.149476"/>
+		<axis xyz="0 0 1"/>
+		<parent link="LeftWristYawLink"/>
+		<child link="LeftWristYawIMULink"/>
+	</joint>
+
+	<gazebo reference="LeftWristYawIMULink">
+		<sensor name="LeftWristYawIMU" type="imu">
+			<always_on>true</always_on>
+			<imu> <!-- placeholder tag for IMU --> </imu>
+		</sensor>
+	</gazebo>
+
+	<!-- RIGHT ARM -->
+	<!-- Right Upper Arm Joints -->
+	<joint name="RightShoulderPitch" type="revolute">
+		<origin xyz="0 -0.10337060 0.21502827" rpy="-0.698132 0.0 0.0"   />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="Torso" />
+		<child link="RightShoulderPitchLink" />
+		<limit effort="1000" lower="-3.141592" upper="1.22173" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	<joint name="RightShoulderRoll" type="revolute">
+		<origin rpy="0.698132 0.0 0.0" xyz="0.0 -0.15676000 -0.01300000" />
+		<axis xyz="1 0 0" />
+		<parent link="RightShoulderPitchLink" />
+		<child link="RightShoulderRollLink" />
+		<limit effort="1000" lower="-2.79253" upper="0.349066" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	<joint name="RightShoulderYaw" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 -0.035 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="RightShoulderRollLink" />
+		<child link="RightShoulderYawLink" />
+		<limit effort="1000" lower="-1.22173" upper="1.91986" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	<joint name="RightElbowPitch" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.015 0.0 -0.3127" />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="RightShoulderYawLink" />
+		<child link="RightElbowPitchLink" />
+		<limit effort="1000" lower="-2.35619" upper="0.174532925" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- Right wrist joints -->
+	<joint name="RightWristYaw" type="revolute">
+		<origin xyz="-0.015 0.0 0.0" rpy="0.0 0.0 0.0"   />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="RightElbowPitchLink" />
+		<child link="RightWristYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="RightWristRoll" type="revolute">
+		<origin xyz="0.0 0.013 -0.25" rpy="0.0 0.0 0.0"/>
+		<axis xyz="1 0 0" />
+		<parent link="RightWristYawLink" />
+		<child link="RightWristRollLink" />
+		<limit effort="20.0" lower="-0.610865" upper="1.8326" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="RightGripperYaw" type="revolute">
+		<origin xyz="0.0 -0.013 -0.031" rpy="0.0 0.0 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="RightWristRollLink" />
+		<child link="RightGripperYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- Right Upper Arm Links -->
+	<link name="RightShoulderPitchLink">
+		<inertial>
+			<mass value="2.99"/>
+			<origin rpy="0 0 0" xyz="-0.00264 -0.12135 -0.006824"/>
+			<inertia ixx="0.0110394" ixy="-0.0003041" ixz="-0.0000594" iyy="0.0051097" iyz="-0.0009183" izz="0.0116925" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightShoulderPitchLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="RightShoulderRollLink">
+		<inertial>
+			<mass value="0.972"/>
+			<origin rpy="0 0 0" xyz="0.012489 -0.01882 -0.0385"/>
+			<inertia ixx="0.002949" ixy="-0.000135" ixz="-0.0003358" iyy="0.0023603" iyz="-0.0005249" izz="0.0014377" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightShoulderRollLink_shortBicep.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="RightShoulderYawLink">
+		<inertial>
+			<mass value="2.91"/>
+			<origin rpy="0 0 0" xyz="0.00524 -0.00274 -0.21745"/>
+			<inertia ixx="0.0248699" ixy="0.0000211" ixz="0.0000211" iyy="0.0245973" iyz="-0.0004444" izz="0.0029883" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightShoulderYawLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0867"/>
+		</visual>
+	</link>
+
+	<!-- right wrist links -->
+	<link name="RightElbowPitchLink">
+		<inertial>
+			<mass value="0.45"/>
+			<origin xyz="-0.0127 0.006913 -0.048421" rpy="0 0 0"/>
+			<inertia ixx="0.0006446" ixy="-0.0000073" ixz="-0.0000345" iyy="0.000625" iyz="-0.0001257" izz="0.0003922" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightElbowPitchLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="RightWristYawLink">
+		<inertial>
+			<mass value="1.547"/> <!-- This is a measured value. Refer to https://docs.google.com/spreadsheets/d/1VXWFJk3VJUsfkHrDaytB2INq94un1KytIOzcKJD0p44/edit?gid=0#gid=0  -->
+			<origin xyz="-0.002616 0.000462 -0.13019" rpy="0 0 0"/>
+			<inertia ixx="0.0037805" ixy="-0.0000177" ixz="-0.000025" iyy="0.0040639" iyz="0.00009" izz="0.0015151" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightWristYawLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="RightWristRollLink">
+		<inertial>
+			<mass value="0.909"/> <!-- This is a measured value. Refer to https://docs.google.com/spreadsheets/d/1VXWFJk3VJUsfkHrDaytB2INq94un1KytIOzcKJD0p44/edit?gid=0#gid=0  -->
+			<origin xyz="-0.0000481 -0.012143 0.000196" rpy="0 0 0"/>
+			<inertia ixx="0.0005535" ixy="0.0000081" ixz="-0.0000231" iyy="0.0005559" iyz="0.0000012" izz="0.0005893" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightWristRollLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+
+	<link name="RightGripperYawLink">
+		<inertial>
+			<mass value="0.251"/>
+			<origin rpy="0 0 0" xyz="-0.000217 -0.000349 0.009761"/>
+			<inertia ixx="0.0000722" ixy="-0.0000016" ixz="-0.0000037" iyy="0.0000747" iyz="0.0000004" izz="0.0000324" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://phantom_description/meshes/cycloidal_arm/RightGripperYawLink.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</visual>
+	</link>
+	<!-- Right ARM IMU's -->
+	<!-- Right Shoulder Pitch IMU Information -->
+	<link name="RightShoulderPitchIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="RightShoulderPitchIMUJoint" type="fixed">
+		<origin rpy="3.141592 0 -1.57079632679" xyz="0.01432621 -0.10001299 -0.00245783"/>
+		<axis xyz="0 0 1"/>
+		<parent link="RightShoulderPitchLink"/>
+		<child link="RightShoulderPitchIMULink"/>
+	</joint>
+	<gazebo reference="RightShoulderPitchIMULink">
+		<sensor name="RightShoulderPitchIMU" type="imu">
+			<always_on>true</always_on>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Right ShoulderYaw IMU Note: in CAD this is the left bicep IMU -->
+	<link name="RightShoulderYawIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+	<joint name="RightShoulderYawIMUJoint" type="fixed">
+		<origin rpy="-1.570796 0.0 0.314159" xyz="0.00119168 0.00914134 -0.19881468"/>
+		<axis xyz="0 0 1"/>
+		<parent link="RightShoulderYawLink"/>
+		<child link="RightShoulderYawIMULink"/>
+	</joint>
+	<gazebo reference="RightShoulderYawIMULink">
+		<sensor name="RightShoulderYawIMU" type="imu">
+			<always_on>true</always_on>
+			<pose>0 0 0 0 0 0</pose>
+			<imu>
+				<noise>
+					<type>gaussian</type>
+					<rate>
+						<mean>0</mean>
+						<stddev>0.0002</stddev>
+						<bias_mean>7.5e-06</bias_mean>
+						<bias_stddev>8e-07</bias_stddev>
+					</rate>
+					<accel>
+						<mean>0</mean>
+						<stddev>0.017</stddev>
+						<bias_mean>0.1</bias_mean>
+						<bias_stddev>0.001</bias_stddev>
+					</accel>
+				</noise>
+			</imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Right Wrist Yaw IMU Note: in CAD this is the left bicep IMU -->
+	<link name="RightWristYawIMULink">
+		<inertial>
+			<mass value="0"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+		</inertial>
+	</link>
+
+	<joint name="RightWristYawIMUJoint" type="fixed">
+		<origin rpy="1.571  0.0 1.571" xyz="-0.048986 0.011658 -0.149476"/>
+		<axis xyz="0 0 1"/>
+		<parent link="RightWristYawLink"/>
+		<child link="RightWristYawIMULink"/>
+	</joint>
+
+	<gazebo reference="RightWristYawIMULink">
+		<sensor name="RightWristYawIMU" type="imu">
+			<always_on>true</always_on>
+			<imu> <!-- placeholder tag for IMU --> </imu>
+		</sensor>
+	</gazebo>
+
+	<!-- Gripper Fixed Joints -->
+<!--	<joint name="LeftGrippertAttachmentFixedJoint" type="fixed">-->
+<!--		<origin rpy="0 0 0" xyz="0 0 -0.0210000"/>-->
+<!--		<parent link="LeftGripperYawLink"/>-->
+<!--		<child link="LeftBarrettPalmLink"/>-->
+<!--	</joint>-->
+<!--	<joint name="RightGrippertAttachmentFixedJoint" type="fixed">-->
+<!--		<origin rpy="0 0 0" xyz="0 0 -0.0210000"/>-->
+<!--		<parent link="RightGripperYawLink"/>-->
+<!--		<child link="RightBarrettPalmLink"/>-->
+<!--	</joint>-->
+
+	<joint name="LeftGrippertAttachmentFixedJoint" type="fixed">
+		<origin rpy="0 3.14159265359 0" xyz="0 0 0"/>
+		<parent link="LeftGripperYawLink"/>
+		<child link="left_hand_base"/>
+	</joint>
+	<joint name="RightGrippertAttachmentFixedJoint" type="fixed">
+		<origin rpy="3.14159265359 0 0" xyz="0 0 0"/>
+		<parent link="RightGripperYawLink"/>
+		<child link="right_hand_base"/>
+	</joint>
+
+	<!-- HAND LINKS -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BARRETT PALM LINKS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~ NOTE DUMBBELL LINKS AT THE BOTTOM ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- These palm links account for all of the barrett hand mass (including the fingers) in a "hand-closed"
+	  configuration. Useful when the Barrett hands aren't actuated (such as when holding weights). If we move
+	  to using the real links and joints, these approximations should not be used. -->
+	<link name="RightBarrettPalmLink">
+		<inertial>
+			<mass value="0.944"/>
+			<origin xyz="0.0 -0.00482 -0.04594" rpy="1.57079632679 0.0 -1.57079632679"/>
+			<inertia ixx="0.00150" ixy="-2.1617e-6" ixz="-4.765e-7" iyy="0.001223" iyz="2.018e-6" izz="0.00117"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="1.57079632679  0 -1.57079632679"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/hand_base.dae"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+	</link>
+
+
+	<link name="LeftBarrettPalmLink">
+		<inertial>
+			<mass value="0.944"/>
+			<origin xyz="0.0 -0.00482 -0.04594" rpy="1.57079632679 0.0 -1.57079632679"/>
+			<inertia ixx="0.00150" ixy="-2.1617e-6" ixz="-4.765e-7" iyy="0.001223" iyz="2.018e-6" izz="0.00117"/>
+		</inertial>
+		<visual>;
+			<origin xyz="0 0 0" rpy="1.57079632679  0 -1.57079632679"/>
+			<geometry>;
+				<mesh filename="package://barrett_description/meshes/bh280/hand_base.dae"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>;
+		</visual>
+	</link>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- DUMBBELL JOINTS AND LINKS -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!--	<joint name="RightHandDumbbellAttachmentFixedJoint" type="fixed">-->
+<!--		<origin rpy="0 0 0" xyz="0 0 -0.027"/>-->
+<!--		<parent link="RightBarrettPalmLink"/>-->
+<!--		<child link="RightHandDumbbellLink"/>-->
+<!--	</joint>-->
+
+<!--	<joint name="LeftHandDumbbellAttachmentFixedJoint" type="fixed">-->
+<!--		<origin rpy="0 0 0" xyz="0 0 -0.027"/>-->
+<!--		<parent link="LeftBarrettPalmLink"/>-->
+<!--		<child link="LeftHandDumbbellLink"/>-->
+<!--	</joint>-->
+
+<!--	<link name="RightHandDumbbellLink">-->
+<!--		<inertial>-->
+<!--			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>-->
+<!--			&lt;!&ndash; 4 kg dumbbell (2.5 lb plates) &ndash;&gt;-->
+<!--			<mass value="3.956"/>-->
+<!--			<inertia ixx="0.03371325" ixy="0.0" ixz="0.0" iyy="0.00739373" iyz="0.0" izz="0.03371325"/>-->
+
+<!--			&lt;!&ndash; 6.25 kg dumbbell (two 2.5 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="6.224"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.05453576" ixy="0.0" ixz="0.0" iyy="0.01465133" iyz="0.0" izz="0.05453576"/>&ndash;&gt;-->
+
+<!--			&lt;!&ndash; 8.5 kg dumbbell (7.5 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="8.49188"/>&ndash;&gt;-->
+<!--			&lt;!&ndash; <inertia ixx="0.07315278" ixy="0.0" ixz="0.0" iyy="0.02190854" iyz="0.0" izz="0.07315278"/> &ndash;&gt;-->
+
+<!--			&lt;!&ndash; 11 kg dumbbell (10 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="10.708"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.10382634" ixy="0.0" ixz="0.0" iyy="0.04523613" iyz="0.0" izz="0.10382634"/> &ndash;&gt;-->
+
+<!--			&lt;!&ndash; 13 kg dumbbell (10 and 2.5 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="12.976"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.13016235" ixy="0.0" ixz="0.0" iyy="0.05249373" iyz="0.0" izz="0.13016235"/> &ndash;&gt;-->
+
+<!--			&lt;!&ndash; 7.5 and 2.5 lb plates &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="10.75984"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.10145919" ixy="0.0" ixz="0.0" iyy="0.02916602" iyz="0.0" izz="0.10145919"/> &ndash;&gt;-->
+<!--		</inertial>-->
+<!--	</link>-->
+
+<!--	<link name="LeftHandDumbbellLink">-->
+<!--		<inertial>-->
+<!--			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>-->
+<!--			&lt;!&ndash; 4 kg dumbbell (2.5 lb plates) &ndash;&gt;-->
+<!--			<mass value="3.956"/>-->
+<!--			<inertia ixx="0.03371325" ixy="0.0" ixz="0.0" iyy="0.00739373" iyz="0.0" izz="0.03371325"/>-->
+
+<!--			&lt;!&ndash; 6.25 kg dumbbell (two 2.5 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="6.224"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.05453576" ixy="0.0" ixz="0.0" iyy="0.01465133" iyz="0.0" izz="0.05453576"/>&ndash;&gt;-->
+
+<!--			&lt;!&ndash; 8.5 kg dumbbell (7.5 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="8.49188"/>&ndash;&gt;-->
+<!--			&lt;!&ndash; <inertia ixx="0.07315278" ixy="0.0" ixz="0.0" iyy="0.02190854" iyz="0.0" izz="0.07315278"/> &ndash;&gt;-->
+
+<!--			&lt;!&ndash; 11 kg dumbbell (10 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="10.708"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.10382634" ixy="0.0" ixz="0.0" iyy="0.04523613" iyz="0.0" izz="0.10382634"/> &ndash;&gt;-->
+
+<!--			&lt;!&ndash; 13 kg dumbbell (10 and 2.5 lb plates) &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="12.976"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.13016235" ixy="0.0" ixz="0.0" iyy="0.05249373" iyz="0.0" izz="0.13016235"/> &ndash;&gt;-->
+
+<!--			&lt;!&ndash; 7.5 and 2.5 lb plates &ndash;&gt;-->
+<!--			&lt;!&ndash;<mass value="10.75984"/>&ndash;&gt;-->
+<!--			&lt;!&ndash;<inertia ixx="0.10145919" ixy="0.0" ixz="0.0" iyy="0.02916602" iyz="0.0" izz="0.10145919"/> &ndash;&gt;-->
+<!--		</inertial>-->
+<!--	</link>-->
+
+	<!-- ~~~~~~~~~~ BARRETT HAND LINKS ~~~~~~~~~~ -->
+	<!-- These are the real barrett links and joints, currently unused. -->
+
+	<!-- ~~~~~~~~~~ LEFT BARRETT ~~~~~~~~~~ -->
+	<link name="left_hand_base">
+		<inertial>
+			<origin xyz="5.0019e-005 -0.0044561 0.037268" rpy="3.14159265359 0.0 0" />
+			<mass value="0.60858"/>
+			<inertia
+					ixx="0.0006986" ixy="2.7577e-007" ixz="-7.8138e-007"
+					iyy="0.00050354" iyz="-6.44e-005"
+					izz="0.00062253"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0.0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/hand_base.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/hand_base_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<link name="left_finger0_0">
+		<inertial>
+			<origin xyz="0.030616 -7.3219e-005 -0.011201"/>
+			<mass value="0.14109"/>
+			<inertia
+					ixx="2.0672e-005" ixy="2.6024e-007" ixz="6.3481e-006"
+					iyy="7.4105e-005" iyz="1.7118e-008"
+					izz="6.8207e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_0.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_0_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j00" type="revolute">
+		<origin xyz="-0.025 0 0.0754" rpy="0 -0 -1.5708"/>
+		<parent link="left_hand_base"/>
+		<child link="left_finger0_0"/>
+		<axis xyz="0 0 -1"/>
+		<limit effort="0" lower="0" upper="3.14159265359" velocity="2.0"/>
+	</joint>
+
+	<link name="left_finger0_1">
+		<inertial>
+			<origin xyz="0.023133 0.00078642 0.00052792"/>
+			<mass value="0.062139"/>
+			<inertia
+					ixx="4.8162e-006" ixy="5.7981e-007" ixz="-7.2483e-007"
+					iyy="4.3317e-005" iyz="-2.6653e-009"
+					izz="4.4441e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_1.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_1_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j01" type="revolute">
+		<origin xyz="0.0500 0.0008 0" rpy="1.5707963267949 0 0"/>
+		<parent link="left_finger0_0"/>
+		<child link="left_finger0_1"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="2.44346095279" velocity="2.0"/>
+	</joint>
+
+	<link name="left_finger0_2">
+		<inertial>
+			<origin xyz="0.02295 0.0010739 0.00041752"/>
+			<mass value="0.04166"/>
+			<inertia
+					ixx="3.1199e-006" ixy="4.5115e-007" ixz="-2.9813e-007"
+					iyy="1.6948e-005" iyz="-1.8635e-008"
+					izz="1.5809e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_2.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_2_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j02" type="fixed">
+		<origin xyz="0.069935684739622 0.003 0.0002" rpy="0 0 0.698131700822416"/>
+		<parent link="left_finger0_1"/>
+		<child link="left_finger0_2"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="0.837758040957" velocity="2.0"/>
+		<mimic joint="left_j01" multiplier="0.321428571429" offset="0.0"/>
+	</joint>
+
+	<link name="left_finger1_0">
+		<inertial>
+			<origin xyz="0.030616 -7.3219e-005 -0.011201"/>
+			<mass value="0.14109"/>
+			<inertia
+					ixx="2.0672e-005" ixy="2.6024e-007" ixz="6.3481e-006"
+					iyy="7.4105e-005" iyz="1.7118e-008"
+					izz="6.8207e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_0.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_0_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j10" type="revolute">
+		<origin xyz="0.025 0 0.0754" rpy="0 -0.0058448 -1.5708"/>
+		<parent link="left_hand_base"/>
+		<child link="left_finger1_0"/>
+		<axis xyz="0.0058448 0 0.99998"/>
+		<limit effort="0" lower="0" upper="3.14159265359" velocity="2.0"/>
+		<mimic joint="left_j00" multiplier="1" offset="0"/>
+	</joint>
+
+	<link name="left_finger1_1">
+		<inertial>
+			<origin xyz="0.023133 0.00078642 0.00052792"/>
+			<mass value="0.062139"/>
+			<inertia
+					ixx="4.8162e-006" ixy="5.7981e-007" ixz="-7.2483e-007"
+					iyy="4.3317e-005" iyz="-2.6653e-009"
+					izz="4.4441e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_1.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_1_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j11" type="revolute">
+		<origin xyz="0.05 0.0008 -0.000292240753933679" rpy="1.5707963267949 0 0"/>
+		<parent link="left_finger1_0"/>
+		<child link="left_finger1_1"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="2.44346095279" velocity="2.0"/>
+	</joint>
+
+	<link name="left_finger1_2">
+		<inertial>
+			<origin xyz="0.02295 0.0010739 0.00041752"/>
+			<mass value="0.04166"/>
+			<inertia
+					ixx="3.1199e-006" ixy="4.5115e-007" ixz="-2.9813e-007"
+					iyy="1.6948e-005" iyz="-1.8635e-008"
+					izz="1.5809e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_2.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_2_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j12" type="fixed">
+		<origin xyz="0.0699356847396015 0.003 0.0002" rpy="0 0 0.700079983587682"/>
+		<parent link="left_finger1_1"/>
+		<child link="left_finger1_2"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="0.837758040957" velocity="2.0"/>
+		<mimic joint="left_j11" multiplier="0.321428571429" offset="0.0"/>
+	</joint>
+
+	<link name="left_finger2_1">
+		<inertial>
+			<origin xyz="0.023133 0.00078642 0.00052792"/>
+			<mass value="0.062139"/>
+			<inertia
+					ixx="4.8162e-006" ixy="5.7981e-007" ixz="-7.2483e-007"
+					iyy="4.3317e-005" iyz="-2.6653e-009"
+					izz="4.4441e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_1.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_1_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j21" type="revolute">
+		<origin xyz="-0.0008 0.05 0.0754000000000003" rpy="1.5707963267949 2.77555756156289E-17 1.5707963267949"/>
+		<parent link="left_hand_base"/>
+		<child link="left_finger2_1"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="2.44346095279" velocity="2.0"/>
+	</joint>
+
+	<link name="left_finger2_2">
+		<inertial>
+			<origin xyz="0.02295 0.0010739 0.00041752"/>
+			<mass value="0.04166"/>
+			<inertia
+					ixx="3.1199e-006" ixy="4.5115e-007" ixz="-2.9813e-007"
+					iyy="1.6948e-005" iyz="-1.8635e-008"
+					izz="1.5809e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_2.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_2_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="left_j22" type="fixed">
+		<origin xyz="0.0699356847396236 0.003 0.0002" rpy="0 0 0.698131700797743"/>
+		<parent link="left_finger2_1"/>
+		<child link="left_finger2_2"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="0.837758040957" velocity="2.0"/>
+		<mimic joint="left_j21" multiplier="0.321428571429" offset="0.0"/>
+	</joint>
+
+
+	<!-- ~~~~~~~~~~ RIGHT BARRETT ~~~~~~~~~~ -->
+	<link name="right_hand_base">
+		<inertial>
+			<origin xyz="5.0019e-005 -0.0044561 0.037268"/>
+			<mass value="0.60858"/>
+			<inertia
+					ixx="0.0006986" ixy="2.7577e-007" ixz="-7.8138e-007"
+					iyy="0.00050354" iyz="-6.44e-005"
+					izz="0.00062253"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0.0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/hand_base.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/hand_base_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<link name="right_finger0_0">
+		<inertial>
+			<origin xyz="0.030616 -7.3219e-005 -0.011201"/>
+			<mass value="0.14109"/>
+			<inertia
+					ixx="2.0672e-005" ixy="2.6024e-007" ixz="6.3481e-006"
+					iyy="7.4105e-005" iyz="1.7118e-008"
+					izz="6.8207e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_0.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_0_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j00" type="revolute">
+		<origin xyz="-0.025 0 0.0754000000000003" rpy="-9.27906974436996E-30 -2.56739074444568E-16 -1.5707963267949"/>
+		<parent link="right_hand_base"/>
+		<child link="right_finger0_0"/>
+		<axis xyz="0 0 -1"/>
+		<limit effort="0" lower="0" upper="3.14159265359" velocity="2.0"/>
+	</joint>
+
+	<link name="right_finger0_1">
+		<inertial>
+			<origin xyz="0.023133 0.00078642 0.00052792"/>
+			<mass value="0.062139"/>
+			<inertia
+					ixx="4.8162e-006" ixy="5.7981e-007" ixz="-7.2483e-007"
+					iyy="4.3317e-005" iyz="-2.6653e-009"
+					izz="4.4441e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_1.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_1_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j01" type="revolute">
+		<origin xyz="0.0500000000000007 0.000799999999999971 0" rpy="1.5707963267949 0 0"/>
+		<parent link="right_finger0_0"/>
+		<child link="right_finger0_1"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="2.44346095279" velocity="2.0"/>
+	</joint>
+
+	<link name="right_finger0_2">
+		<inertial>
+			<origin xyz="0.02295 0.0010739 0.00041752"/>
+			<mass value="0.04166"/>
+			<inertia
+					ixx="3.1199e-006" ixy="4.5115e-007" ixz="-2.9813e-007"
+					iyy="1.6948e-005" iyz="-1.8635e-008"
+					izz="1.5809e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_2.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger0_2_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j02" type="fixed">
+		<origin xyz="0.069935684739622 0.00300000000000003 0.000200000000006934" rpy="-3.77533479986348E-14 -4.45260733378639E-14 0.698131700822416"/>
+		<parent link="right_finger0_1"/>
+		<child link="right_finger0_2"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="0.837758040957" velocity="2.0"/>
+		<mimic joint="right_j01" multiplier="0.321428571429" offset="0.0"/>
+	</joint>
+
+	<link name="right_finger1_0">
+		<inertial>
+			<origin xyz="0.030616 -7.3219e-005 -0.011201"/>
+			<mass value="0.14109"/>
+			<inertia
+					ixx="2.0672e-005" ixy="2.6024e-007" ixz="6.3481e-006"
+					iyy="7.4105e-005" iyz="1.7118e-008"
+					izz="6.8207e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_0.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_0_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j10" type="revolute">
+		<origin xyz="0.025 0 0.0754" rpy="-9.2871E-30 -0.0058448 -1.5708"/>
+		<parent link="right_hand_base"/>
+		<child link="right_finger1_0"/>
+		<axis xyz="0.0058448 0 0.99998"/>
+		<limit effort="0" lower="0" upper="3.14159265359" velocity="2.0"/>
+		<mimic joint="right_j00" multiplier="1" offset="0"/>
+	</joint>
+
+	<link name="right_finger1_1">
+		<inertial>
+			<origin xyz="0.023133 0.00078642 0.00052792"/>
+			<mass value="0.062139"/>
+			<inertia
+					ixx="4.8162e-006" ixy="5.7981e-007" ixz="-7.2483e-007"
+					iyy="4.3317e-005" iyz="-2.6653e-009"
+					izz="4.4441e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_1.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_1_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j11" type="revolute">
+		<origin xyz="0.0499991459461259 0.000799999999999367 -0.000292240753933679" rpy="1.5707963267949 0 -4.93038065763132E-32"/>
+		<parent link="right_finger1_0"/>
+		<child link="right_finger1_1"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="2.44346095279" velocity="2.0"/>
+	</joint>
+
+	<link name="right_finger1_2">
+		<inertial>
+			<origin xyz="0.02295 0.0010739 0.00041752"/>
+			<mass value="0.04166"/>
+			<inertia
+					ixx="3.1199e-006" ixy="4.5115e-007" ixz="-2.9813e-007"
+					iyy="1.6948e-005" iyz="-1.8635e-008"
+					izz="1.5809e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_2.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger1_2_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j12" type="fixed">
+		<origin xyz="0.0699356847396015 0.00300000000003377 0.000199999999999378" rpy="1.95799899548702E-16 2.29686057908074E-16 0.700079983587682"/>
+		<parent link="right_finger1_1"/>
+		<child link="right_finger1_2"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="0.837758040957" velocity="2.0"/>
+		<mimic joint="right_j11" multiplier="0.321428571429" offset="0.0"/>
+	</joint>
+
+	<link name="right_finger2_1">
+		<inertial>
+			<origin xyz="0.023133 0.00078642 0.00052792"/>
+			<mass value="0.062139"/>
+			<inertia
+					ixx="4.8162e-006" ixy="5.7981e-007" ixz="-7.2483e-007"
+					iyy="4.3317e-005" iyz="-2.6653e-009"
+					izz="4.4441e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_1.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_1_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j21" type="revolute">
+		<origin xyz="-0.000799999999999992 0.05 0.0754000000000003" rpy="1.5707963267949 2.77555756156289E-17 1.5707963267949"/>
+		<parent link="right_hand_base"/>
+		<child link="right_finger2_1"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="2.44346095279" velocity="2.0"/>
+	</joint>
+
+	<link name="right_finger2_2">
+		<inertial>
+			<origin xyz="0.02295 0.0010739 0.00041752"/>
+			<mass value="0.04166"/>
+			<inertia
+					ixx="3.1199e-006" ixy="4.5115e-007" ixz="-2.9813e-007"
+					iyy="1.6948e-005" iyz="-1.8635e-008"
+					izz="1.5809e-005"/>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_2.obj"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://barrett_description/meshes/bh280/finger2_2_collision.STL"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="right_j22" type="fixed">
+		<origin xyz="0.0699356847396236 0.00300000000000011 0.000199999999999993" rpy="5.6276902721421E-16 5.75421399737176E-16 0.698131700797743"/>
+		<parent link="right_finger2_1"/>
+		<child link="right_finger2_2"/>
+		<axis xyz="0 0 1"/>
+		<limit effort="0" lower="0" upper="0.837758040957" velocity="2.0"/>
+		<mimic joint="right_j21" multiplier="0.321428571429" offset="0.0"/>
+	</joint>
+	
+</robot>

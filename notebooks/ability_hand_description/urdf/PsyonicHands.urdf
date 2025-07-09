@@ -1,0 +1,48 @@
+<?xml version = "1.0" ?>
+<robot name="Alex">
+
+	<!-- Gripper Fixed Joints -->
+
+	<joint name="LeftGrippertAttachmentFixedJoint" type="fixed">
+		<origin rpy="0 0 0" xyz="-0.018385 0 -0.01560000"/> <!--<origin rpy="3.141592 0 0" xyz="0 0 -0.02560000"/>-->
+		<parent link="LeftGripperYawLink"/>
+		<child link="LeftPsyonicHand"/>
+	</joint>
+	<joint name="RightGrippertAttachmentFixedJoint" type="fixed">
+		<origin rpy="0 0 0" xyz="-0.018385 0 -0.01560000"/> <!--<origin rpy="-3.141592 0 3.141592" xyz="0 0 -0.01560000"/>-->
+		<parent link="RightGripperYawLink"/>
+		<child link="RightPsyonicHand"/>
+	</joint>
+
+	<!-- HAND LINKS -->
+	<!-- Left Psyonic Ability Hand -->
+	<link name="LeftPsyonicHand">		
+		<inertial>	<!-- the mass and inertia here are NOT correct -->
+			<mass value = "0.500"/>
+			<inertia ixx="0.0011067" ixy="-0.0001015" ixz="0.0000509" iyy="0.0008085" iyz="-0.0000053" izz="0.0004947" />
+			<origin rpy = "0 0 0" xyz="0.004676 -0.006268 -0.063361"/>
+		</inertial>
+		<visual name="PsyonicLeft">
+			<origin rpy = "0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability_hand_description/models/PsyonicLeft.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	
+	<link name="RightPsyonicHand">	
+		<inertial>	<!-- the mass and inertia here are NOT correct -->
+			<mass value = "0.500"/>
+			<inertia ixx="0.0011067" ixy="0.0001015" ixz="0.0000509" iyy="0.0008085" iyz="0.0000053" izz="0.0004947" />
+			<origin rpy = "0 0 0" xyz="0.004676 0.006268 -0.063361"/>
+		</inertial>
+		<visual name="PsyonicRight">
+			<origin rpy = "0 0 3.14" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability_hand_description/models/PsyonicRight.obj"/>
+			</geometry>
+		</visual>	
+	</link>
+	
+
+</robot>

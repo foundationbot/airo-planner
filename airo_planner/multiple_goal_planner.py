@@ -51,6 +51,8 @@ class MultipleGoalPlanner(abc.ABC):
 
     def _check_ik_solutions_validity(self, ik_solutions: list[JointConfigurationType]) -> list[JointConfigurationType]:
         """Used by plan_to_tcp_pose() to check which IK solutions are valid."""
+        for s in ik_solutions:
+            print(s)
         ik_solutions_valid = [s for s in ik_solutions if self.is_state_valid_fn(s)]
         if len(ik_solutions_valid) == 0:
             raise NoValidInverseKinematicsSolutionsError(ik_solutions)

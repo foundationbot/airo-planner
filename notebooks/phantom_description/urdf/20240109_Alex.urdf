@@ -1,0 +1,1160 @@
+<?xml version = "1.0" ?>
+<robot name="Alex">
+
+	<!-- Pelvis Base -->
+	<link name="Pelvis">
+	  <inertial>
+		<mass value="10.0"/>
+		<origin rpy="0 0 0" xyz="0.02 0.0 -0.02"/>
+		<inertia ixx="0.0942" ixy="6.05E-06" ixz="0.000379" iyy="0.0416" iyz="3.37E-07" izz="0.112" />
+	  </inertial>
+	</link>
+
+	<!-- pelvis_stim_imu -->
+	  <joint name="PelvisStimIMUFixedJoint" type="fixed">
+		<parent link="Pelvis"/>
+		<child link="PelvisStimIMUMount"/>
+		<origin xyz="-0.03133646 0.02237500 -0.07000000" rpy="0.0 3.141592 0.0"/>
+	  </joint>
+
+	<link name="PelvisStimIMUMount">
+		<inertial>
+		  <mass value="0.0" />
+		  <origin xyz="0 0 0" rpy="0 0 0" />
+		  <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+		</inertial>
+	</link>
+
+	<gazebo reference="PelvisStimIMUMount">
+		<sensor name="PelvisStimImu" type="imu">
+		  <always_on>1</always_on>
+		  <update_rate>1000.0</update_rate>
+		  <imu>
+			<noise>
+			  <type>gaussian</type>
+			  <rate>
+				<mean>0.0</mean>
+				<stddev>2e-4</stddev>
+				<bias_mean>0.0000075</bias_mean>
+				<bias_stddev>0.0000008</bias_stddev>
+			  </rate>
+			  <accel>
+				<mean>0.0</mean>
+				<stddev>1.7e-2</stddev>
+				<bias_mean>0.1</bias_mean>
+				<bias_stddev>0.001</bias_stddev>
+			  </accel>
+			</noise>
+		  </imu>
+		</sensor>
+	</gazebo>
+	<!-- end pelvis stim imu -->
+
+	<!-- Spine Joints -->
+	<joint name="SpineYaw" type="revolute">
+		<origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+		<axis xyz="0 0 1" />
+		<parent link="Pelvis" />
+		<child link="SpineYawLink" />
+		<limit effort="80" lower="-1.0472" upper="1.0472" velocity = "20.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="SpineRoll" type="revolute">
+		<origin rpy="0 0 0" xyz="-0.08 0 0.12" />
+		<axis xyz="1 0 0" />
+		<parent link="SpineYawLink" />
+		<child link="SpineRollLink" />
+		<limit effort="150.0" lower="-0.436332" upper="0.436332" velocity = "6.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="SpinePitch" type="revolute">
+		<origin rpy="0 0 0" xyz="0.12 0.0 0.0" />
+		<axis xyz="0 1 0" />
+		<parent link="SpineRollLink" />
+		<child link="Torso" />
+		<limit effort="200.0" lower="-0.785398" upper="0.785398" velocity = "6.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- Neck Joints -->
+	<joint name="NeckYaw" type="revolute">
+		<origin rpy="0 0 0" xyz="0.0 0.0 0.3" />
+		<axis xyz="0 0 1" />
+		<parent link="Torso" />
+		<child link="NeckYawLink" />
+		<limit effort="80.0" lower="-1.5708" upper="1.5708" velocity = "20.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<joint name="NeckPitch" type="revolute">
+		<origin rpy="0 0 0" xyz="0.0 0.0 0.173" />
+		<axis xyz="0 1 0" />
+		<parent link="NeckYawLink" />
+		<child link="Head" />
+		<limit effort="20" lower="-1.0472" upper="1.0472" velocity = "20.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- Spine Links -->
+	<link name="SpineYawLink">
+	  <inertial>
+		<mass value="0.91"/>
+		<origin rpy="0 0 0" xyz="-0.00853118 -2.697E-05 0.03791445"/>
+		<inertia ixx="0.00374289408" ixy="1.25497934E-07" ixz="0.000271325072" iyy="0.00403002777" iyz="-1.38015692E-07" izz="0.0062129847" />
+	  </inertial>
+	</link>
+
+	<link name="SpineRollLink">
+	  <inertial>
+		<mass value="0.44"/>
+		<origin rpy="0 0 0" xyz="-0.01904983 7E-08 0.01979244"/>
+		<inertia ixx="0.000373262301" ixy="-1.51441878E-10" ixz="-6.69067307E-05" iyy="0.000649978475" iyz="-1.27858402E-10" izz="0.000419408851" />
+	  </inertial>
+	</link>
+
+	<!-- Torso Link -->
+	<link name="Torso">
+	  <inertial>
+		<mass value="13.5"/>
+		<origin rpy="0 0 0" xyz="-0.03613868 -2.81E-06 0.25908586"/>
+		<inertia ixx="0.534504681" ixy="8.41519717E-05" ixz="-0.00672956305" iyy="0.505409852" iyz="0.000207996773" izz="0.379402013" />
+	  </inertial>
+	  <visual>
+			<geometry>
+				<mesh filename="package://alex_description/meshes/Torso.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		  </visual>	
+	</link>
+
+	<!-- Neck and Head -->
+	<!-- Inertia data is a placeholder -->
+	<link name="NeckYawLink">
+	  <inertial>
+		<mass value="1.0"/>
+		<origin rpy="0 0 0" xyz="0.0 0.0 0.1"/>
+		<inertia 
+			  ixx="0.0036746953546519796" 
+			  ixy="1.5200537475756135E-5" 
+			  ixz="-1.3155829305043117E-5"
+			  iyy="0.003955455275643572" 
+			  iyz="-9.878441058198549E-5" 
+			  izz="0.0014329681446651732" />    
+	  </inertial>
+	  <!--visual>
+			<geometry>
+				<mesh filename="package://alex_description/meshes/NeckYaw.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	   </visual-->	
+	</link>
+
+	<link name="Head">
+	 <inertial>
+		<mass value="3.0"/>
+		<origin rpy="0 0 0" xyz="0.06 0.0 0.04"/>
+		<inertia ixx="0.00345011" ixy="-0.0000073" ixz="0.0014225" iyy="0.00955764" iyz="-2.269e-7" izz="0.00881313" />
+	  </inertial>
+	  <visual>
+			<geometry>
+				<mesh filename="package://alex_description/meshes/Head.obj"/>
+			</geometry>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		  </visual>	
+	</link>
+
+
+	<!-- left upper arm joints -->
+	<joint name="LeftShoulderPitch" type="revolute">
+		<origin xyz="-0.011 0.113 0.227" rpy="0.698132 0.0 0.0"   />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="Torso" />
+		<child link="LeftShoulderPitchLink" />
+		<limit effort="150.0" lower="-3.141592" upper="1.22173" velocity = "9.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="LeftShoulderRoll" type="revolute">
+		<origin rpy="-0.785398163 0.0 0.0" xyz="0.0 0.15676000 -0.01300000" />
+		<axis xyz="1 0 0" />
+		<parent link="LeftShoulderPitchLink" />
+		<child link="LeftShoulderRollLink" />
+		<limit effort="150.0" lower="-0.261799" upper="2.87979" velocity = "9.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="LeftShoulderYaw" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.035 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="LeftShoulderRollLink" />
+		<child link="LeftShoulderYawLink" />
+		<limit effort="80.0" lower="-1.91986" upper="1.22173" velocity = "11.5" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="LeftElbowPitch" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.015 0.0 -0.4" />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="LeftShoulderYawLink" />
+		<child link="LeftElbowPitchLink" />
+		<limit effort="80.0" lower="-2.35619" upper="0.174532925" velocity = "11.5" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<!-- left wrist joints -->
+	<joint name="LeftWristYaw" type="revolute">
+		<origin xyz="-0.015 0.0 0.0" rpy="0.0 0.0 0.0"   />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="LeftElbowPitchLink" />
+		<child link="LeftWristYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="LeftWristRoll" type="revolute">
+		<origin xyz="0.0 -0.013 -0.25" rpy="0.0 0.0 0.0"/>
+		<axis xyz="1 0 0" />
+		<parent link="LeftWristYawLink" />
+		<child link="LeftWristRollLink" />
+		<limit effort="20.0" lower="-1.8326" upper="0.610865" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="LeftGripperYaw" type="revolute">
+		<origin xyz="0.0 0.013 -0.031" rpy="0.0 0.0 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="LeftWristRollLink" />
+		<child link="LeftGripperYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<!-- left upper arm links -->
+	<link name="LeftShoulderPitchLink">
+	  <inertial>
+		<mass value="2.917"/>
+		<origin rpy="0 0 0" xyz="-0.00117 0.1400097 -0.00621"/>
+		<inertia ixx="0.0108367" ixy="1.356e-4" ixz="-2.666e-5" iyy="0.00498324" iyz="0.00090758" izz="0.01142661" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftShoulderPitchLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+
+	<link name="LeftShoulderRollLink">
+	  <inertial>
+		<mass value="1.17068"/>
+		<origin rpy="0 0 0" xyz="0.01053 0.02124 -0.1052690"/>
+		<inertia ixx="0.00787035" ixy="1.667e-4" ixz="-0.00075945" iyy="0.00727481" iyz="0.000988837" izz="0.00182144" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftShoulderRollLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+
+	<link name="LeftShoulderYawLink">
+	  <inertial>
+		<mass value="2.53059"/>
+		<origin rpy="0 0 0" xyz="0.00479 0.00062 -0.3624141"/>
+		<inertia ixx="0.02277422" ixy="5.053e-5" ixz="0.0012266" iyy="0.0225956" iyz="-2.571e-4" izz="0.00260312" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftShoulderYawLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+	
+	<!-- left wrist links -->	
+	<link name="LeftElbowPitchLink">
+      <inertial>
+        <mass value="0.4895385722366345"/>
+        <origin xyz="-0.012039456382923622 -0.003781574950319319 -0.04998167188554722" rpy="0 0 0"/>        
+      <inertia 
+	    ixx="7.466682164602668E-4" 
+		ixy="-4.9125185240164585E-6" 
+		ixz="-3.118756072793259E-5" 
+		iyy="6.697708130628391E-4" 
+		iyz="1.4985943611036623E-4" 
+		izz="4.976405971436793E-4" />    
+	  </inertial>
+      <visual>
+        <geometry>
+            <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftElbowPitchLink.obj"/>
+        </geometry>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      </visual>
+    </link>
+	
+	<link name="LeftWristYawLink">
+    <inertial>
+      <mass value="1.5075249788801466"/>
+        <origin xyz="-0.0024383302867828187 -5.246795816220965E-4 -0.1300914213150444" rpy="0 0 0"/>        
+		<inertia 
+		  ixx="0.0036746953546519796" 
+		  ixy="1.5200537475756135E-5" 
+		  ixz="-1.3155829305043117E-5"
+		  iyy="0.003955455275643572" 
+		  iyz="-9.878441058198549E-5" 
+		  izz="0.0014329681446651732" />    
+		</inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftWristYawLink.obj"/>
+      </geometry>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    </link>
+	
+	
+    <link name="LeftWristRollLink">
+      <inertial>
+        <mass value="0.6953487750589724"/>
+        <origin xyz="1.5946763939368963E-4 0.012435479395687345 0.0016553711070014143" rpy="0 0 0"/>        
+		<inertia 
+		  ixx="5.09001424971436E-4"
+		  ixy="-7.082123470616537E-6" 
+		  ixz="-6.451042619821356E-6" 
+		  iyy="5.251489793788867E-4" 
+		  iyz="-1.2507083234598893E-6" 
+		  izz="5.190882683529875E-4" />    
+	  </inertial>
+      <visual>
+        <geometry>
+            <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftWristRollLink.obj"/>
+        </geometry>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      </visual>
+    </link>
+
+	
+	<link name="LeftGripperYawLink">
+	  <inertial>
+		<mass value="0.2480"/>
+		<origin rpy="0 0 0" xyz="-0.00014709 -0.00037325 0.01033255"/>
+		<inertia 
+		ixx="0.00013926" 
+		ixy="3.991e-8" 
+		ixz="4.497e-7" 
+		iyy="0.00014236" 
+		iyz="-7.218e-7" 
+		izz="0.00011005" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/LeftGripperYawLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+	
+	<!-- Right Upper Arm Joints -->
+	<joint name="RightShoulderPitch" type="revolute">
+		<origin xyz="-0.011 -0.113 0.227" rpy="-0.698132 0.0 0.0"   />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="Torso" />
+		<child link="RightShoulderPitchLink" />
+		<limit effort="1000" lower="-3.141592" upper="1.22173" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	<joint name="RightShoulderRoll" type="revolute">
+		<origin rpy="0.785398163 0.0 0.0" xyz="0.0 -0.15676000 -0.01300000" />
+		<axis xyz="1 0 0" />
+		<parent link="RightShoulderPitchLink" />
+		<child link="RightShoulderRollLink" />
+		<limit effort="1000" lower="-2.87979" upper="0.261799" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	<joint name="RightShoulderYaw" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 -0.035 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="RightShoulderRollLink" />
+		<child link="RightShoulderYawLink" />
+		<limit effort="1000" lower="-1.22173" upper="1.91986" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	<joint name="RightElbowPitch" type="revolute">
+		<origin rpy="0.0 0.0 0.0" xyz="0.015 0.0 -0.4" />
+		<axis xyz="0.0 1.0 0.0" />
+		<parent link="RightShoulderYawLink" />
+		<child link="RightElbowPitchLink" />
+		<limit effort="1000" lower="-2.35619" upper="0.174532925" velocity = "100" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+
+	<!-- right wrist joints -->
+	<joint name="RightWristYaw" type="revolute">
+		<origin xyz="-0.015 0.0 0.0" rpy="0.0 0.0 0.0"   />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="RightElbowPitchLink" />
+		<child link="RightWristYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="RightWristRoll" type="revolute">
+		<origin xyz="0.0 0.013 -0.25" rpy="0.0 0.0 0.0"/>
+		<axis xyz="1 0 0" />
+		<parent link="RightWristYawLink" />
+		<child link="RightWristRollLink" />
+		<limit effort="20.0" lower="-0.610865" upper="1.8326" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<joint name="RightGripperYaw" type="revolute">
+		<origin xyz="0.0 -0.013 -0.031" rpy="0.0 0.0 0.0" />
+		<axis xyz="0.0 0.0 1.0" />
+		<parent link="RightWristRollLink" />
+		<child link="RightGripperYawLink" />
+		<limit effort="20.0" lower="-2.61799" upper="2.61799" velocity = "25.0" />
+		<dynamics damping="0.05" friction="0.0"/>
+	</joint>
+	
+	<!-- Right Upper Arm Links -->
+	<link name="RightShoulderPitchLink">
+	  <inertial>
+		<mass value="2.917"/>
+		<origin rpy="0 0 0" xyz="-0.00117 -0.1400097 -0.00621"/>
+		<inertia ixx="0.0108367" ixy="1.356e-4" ixz="-2.666e-5" iyy="0.00498324" iyz="0.00090758" izz="0.01142661" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/RightShoulderPitchLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+
+	<link name="RightShoulderRollLink">
+	  <inertial>
+		<mass value="1.17068"/>
+		<origin rpy="0 0 0" xyz="-0.01053 -0.02124 -0.1052690"/>
+		<inertia ixx="-0.00787035" ixy="-1.667e-4" ixz="-0.00075945" iyy="0.00727481" iyz="-0.000988837" izz="-0.00182144" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/RightShoulderRollLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+
+	<link name="RightShoulderYawLink">
+	  <inertial>
+		<mass value="2.53059"/>
+		<origin rpy="0 0 0" xyz="0.00479 0.00062 -0.3624141"/>
+		<inertia ixx="0.02277422" ixy="5.053e-5" ixz="0.0012266" iyy="0.0225956" iyz="-2.571e-4" izz="0.00260312" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/RightShoulderYawLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+
+	<!-- right wrist links -->	
+	<link name="RightElbowPitchLink">
+      <inertial>
+        <mass value="0.4895385722366345"/>
+        <origin xyz="-0.012039456382923622 0.003781574950319319 -0.04998167188554722" rpy="0 0 0"/>        
+		  <inertia 
+			ixx="7.466682164602668E-4" 
+			ixy="-4.9125185240164585E-6" 
+			ixz="-3.118756072793259E-5" 
+			iyy="6.697708130628391E-4" 
+			iyz="1.4985943611036623E-4" 
+			izz="4.976405971436793E-4" />    
+	  </inertial>
+      <visual>
+        <geometry>
+            <mesh filename="package://alex_description/meshes/cycloidal_arm/RightElbowPitchLink.obj"/>
+        </geometry>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      </visual>
+    </link>
+	
+	<link name="RightWristYawLink">
+    <inertial>
+      <mass value="1.5075249788801466"/>
+        <origin xyz="-0.0024383302867828187 5.246795816220965E-4 -0.1300914213150444" rpy="0 0 0"/>        
+		<inertia 
+		  ixx="0.0036746953546519796" 
+		  ixy="1.5200537475756135E-5" 
+		  ixz="-1.3155829305043117E-5"
+		  iyy="0.003955455275643572" 
+		  iyz="-9.878441058198549E-5" 
+		  izz="0.0014329681446651732" />    
+		</inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://alex_description/meshes/cycloidal_arm/RightWristYawLink.obj"/>
+      </geometry>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    </link>
+	
+    <link name="RightWristRollLink">
+      <inertial>
+        <mass value="0.6953487750589724"/>
+        <origin xyz="1.5946763939368963E-4 -0.012435479395687345 0.0016553711070014143" rpy="0 0 0"/>        
+		<inertia 
+		  ixx="5.09001424971436E-4"
+		  ixy="-7.082123470616537E-6" 
+		  ixz="-6.451042619821356E-6" 
+		  iyy="5.251489793788867E-4" 
+		  iyz="-1.2507083234598893E-6" 
+		  izz="5.190882683529875E-4" />    
+	  </inertial>
+      <visual>
+        <geometry>
+            <mesh filename="package://alex_description/meshes/cycloidal_arm/RightWristRollLink.obj"/>
+        </geometry>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      </visual>
+    </link>
+
+	<link name="RightGripperYawLink">
+	  <inertial>
+		<mass value="0.2480"/>
+		<origin rpy="0 0 0" xyz="-0.00014709 0.00037325 0.01033255"/>
+		<inertia 
+		ixx="0.00013926" 
+		ixy="3.991e-8" 
+		ixz="4.497e-7" 
+		iyy="0.00014236" 
+		iyz="-7.218e-7" 
+		izz="0.00011005" />
+	  </inertial>
+	  <visual>
+		<geometry>
+		  <mesh filename="package://alex_description/meshes/cycloidal_arm/RightGripperYawLink.obj"/>
+		</geometry>
+		<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+	  </visual>
+	</link>
+
+	<!-- Gripper Fixed Joints -->
+	<joint name="rightGrippertAttachmentFixedJoint" type="fixed">
+		<origin rpy="-3.141592 0 3.141592" xyz="0 0 -0.02560000"/>
+		<parent link="RightGripperYawLink"/>
+		<child link="RightPsyonicAbilityBaseLink"/>
+    </joint>
+	
+	<joint name="leftGrippertAttachmentFixedJoint" type="fixed">
+		<origin rpy="3.141592 0 0" xyz="0 0 -0.02560000"/>
+		<parent link="LeftGripperYawLink"/>
+		<child link="LeftPsyonicAbilityBaseLink"/>
+    </joint>
+	
+	<!-- Left Psyonic Ability Hand -->
+	<link name="LeftPsyonicAbilityBaseLink">
+		<visual name="wrist_mesh">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/wristmesh.obj"/>
+			</geometry>
+		</visual>		
+		<inertial>	<!-- the mass and inertia here are NOT correct -->
+			<mass value = "0.200"/>
+			<inertia ixx="978.26e-6" ixy = "87.34e-6" ixz = "322.99e-6" iyy = "1244.78e-6" iyz = "244.74e-6" izz = "456.22e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+	</link>
+	<joint name="Left_wrist2thumb" type="fixed">
+		<parent link="LeftPsyonicAbilityBaseLink"/>
+		<child link="Left_thumb_base"/>
+		<origin xyz = "24.0476665e-3 3.78124745e-3 32.32964923e-3" rpy = "3.14148426 0.08848813 3.14036612"/>
+	</joint>
+
+	<link name="Left_thumb_base" >
+		<inertial>
+			<mass value = "0.400"/>
+			<inertia ixx="978.26e-6" ixy = "87.34e-6" ixz = "322.99e-6" iyy = "1244.78e-6" iyz = "244.74e-6" izz = "456.22e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+						
+		<visual name="palm_mesh">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/fb_palm_ref.obj"/>
+			</geometry>
+		</visual>		
+	</link>
+	
+	
+	
+	<link name="Left_index_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		<visual name="index_mesh_1">
+			<origin xyz = "0 0 0" rpy = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<link name="Left_index_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>		
+		<visual name="index_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>
+	</link>	
+	<joint name="Left_index_q1" type="revolute">
+		<parent link="Left_thumb_base"/>
+		<child link="Left_index_L1"/>
+		<origin xyz = "-9.49e-3 -13.04e-3 -62.95e-3" rpy = "-1.982050 1.284473 -2.090591" />
+		<axis xyz="0 0 1"/>
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+	</joint>
+	<joint name="Left_index_q2" type="revolute">
+		<parent link="Left_index_L1"/>
+		<child link="Left_index_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000e-3" rpy = "0 0 0.084474"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<mimic joint = "index_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Left_index_anchor"/>
+	<joint name="Left_idx_anchor" type="fixed">
+		<parent link = "Left_index_L2"/>
+		<child link = "Left_index_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+	
+
+	<link name="Left_middle_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		
+		<visual name="middle_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<link name="Left_middle_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>
+		<visual name="middle_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="Left_middle_q1" type="revolute">
+		<parent link="Left_thumb_base"/>
+		<child link="Left_middle_L1"/>
+		<origin xyz = "9.653191e-3 -15.310271e-3 -67.853949e-3" rpy = "-1.860531 1.308458 -1.896217" />
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+	</joint>
+	<joint name="Left_middle_q2" type="revolute">
+		<parent link="Left_middle_L1"/>
+		<child link="Left_middle_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000" rpy = "0 0 0.084474"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<mimic joint = "middle_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Left_middle_anchor"/>
+	<joint name="Left_mid_anchor" type="fixed">
+		<parent link = "Left_middle_L2"/>
+		<child link = "Left_middle_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+
+
+
+
+	<link name="Left_ring_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		
+		<visual name="ring_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<link name="Left_ring_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>
+		<visual name="ring_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>		
+	</link>
+	<joint name="Left_ring_q1" type="revolute">
+		<parent link="Left_thumb_base"/>
+		<child link="Left_ring_L1"/>
+		<origin xyz = "29.954260e-3 -14.212492e-3 -67.286105e-3" rpy = "-1.716598 1.321452 -1.675862" />
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+	</joint>
+	<joint name="Left_ring_q2" type="revolute">
+		<parent link="Left_ring_L1"/>
+		<child link="Left_ring_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000" rpy = "0 0 0.084474"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<mimic joint = "ring_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Left_ring_anchor"/>
+	<joint name="Left_rng_anchor" type="fixed">
+		<parent link = "Left_ring_L2"/>
+		<child link = "Left_ring_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+
+
+	<link name="Left_pinky_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		
+		<visual name="pinky_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<link name="Left_pinky_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>
+		<visual name="pinky_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>		
+	</link>
+	<joint name="Left_pinky_q1" type="revolute">
+		<parent link="Left_thumb_base"/>
+		<child link="Left_pinky_L1"/>
+		<origin xyz = "49.521293e-3 -11.004583e-3 -63.029065e-3" rpy = "-1.765110 1.322220 -1.658383" />
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+	</joint>
+	<joint name="Left_pinky_q2" type="revolute">
+		<parent link="Left_pinky_L1"/>
+		<child link="Left_pinky_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000" rpy = "0 0 0.084474"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+		<mimic joint = "pinky_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Left_pinky_anchor"/>
+	<joint name="Left_pnky_anchor" type="fixed">
+		<parent link = "Left_pinky_L2"/>
+		<child link = "Left_pinky_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+
+
+	<link name="Left_thumb_L1" >
+		<inertial>
+			<mass value = "0.00268342"/>
+			<inertia ixx="0.16931e-6" ixy = "-0.076214e-6" ixz = "-0.16959148e-6" iyy = "0.77769934e-6" iyz = "0.0156622e-6" izz = "0.7249122e-6" />
+			<origin rpy = "0 0 0" xyz = "14.606e-3 -1.890854e-3 -3.1155356e-3"/>
+		</inertial>
+		
+		<visual name="thumb_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/thumb-f1.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<link name="Left_thumb_L2" >
+		<inertial>
+			<mass value = "0.0055"/>
+			<inertia ixx="4.4789082e-6" ixy = "4.4789082e-6" ixz = "-0.62144934e-6" iyy = "15.600996e-6" iyz = "-0.07466143e-6" izz = "17.908554e-6" />
+			<origin rpy = "0 0 0" xyz = "30.020522e-3 5.59476e-3 -4.1504356e-3"/>
+		</inertial>
+		
+		<visual name="thumb_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/thumb-f2-left.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<joint name="Left_thumb_q1" type="revolute">
+		<parent link="Left_thumb_base"/>
+		<child link="Left_thumb_L1"/>
+		<origin xyz = "0 0 0" rpy = "0 0 3.330437"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "-2.0943951" upper = "0" effort = "1.2" velocity = "40.338888721"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+	</joint>
+	<joint name="Left_thumb_q2" type="revolute">
+		<parent link="Left_thumb_L1"/>
+		<child link="Left_thumb_L2"/>
+		<origin xyz = "27.8283501e-3 0 -14.7507000e-3" rpy = "4.450589592585541 0 0" />
+		<axis xyz="0 0 1"/>
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->		
+	</joint>
+	<link name="Left_thumb_anchor"/>
+	<joint name="Left_thmb_anchor" type="fixed">
+		<parent link = "Left_thumb_L2"/>
+		<child link = "Left_thumb_anchor"/>
+		<origin rpy = "0 0 0" xyz = "52.0012259e-3  28.0086971e-3 -.884835778e-3"/>
+	</joint>
+	<!-- End of Left Psyonic Ability Hand -->
+
+	
+	<!-- Right Psyonic Ability Hand -->
+	<link name="RightPsyonicAbilityBaseLink">
+		<visual name="wrist_mesh">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/wristmesh.obj"/>
+			</geometry>
+		</visual>		
+		<inertial>	<!-- the mass and inertia here are NOT correct -->
+			<mass value = "0.200"/>
+			<inertia ixx="978.26e-6" ixy = "87.34e-6" ixz = "322.99e-6" iyy = "1244.78e-6" iyz = "244.74e-6" izz = "456.22e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+	</link>
+	<joint name="Right_wrist2thumb" type="fixed">
+		<parent link="RightPsyonicAbilityBaseLink"/>
+		<child link="Right_thumb_base"/>
+		<origin xyz = "-24.0476665e-3 3.78124745e-3 32.32964923e-3" rpy = "3.14148426 -0.08848813 -3.14036612"/>
+	</joint>
+  
+	<link name="Right_thumb_base" >
+		<inertial>
+			<mass value = "0.200"/>
+			<inertia ixx="978.26e-6" ixy = "87.34e-6" ixz = "322.99e-6" iyy = "1244.78e-6" iyz = "244.74e-6" izz = "456.22e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+						
+		<visual name="palm_mesh">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/fb_palm_ref_mir.obj"/>
+			</geometry>
+		</visual>		
+	</link>
+	
+	<link name="Right_index_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		<visual name="index_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<link name="Right_index_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>		
+		<visual name="index_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="Right_index_q1" type="revolute">
+		<parent link="Right_thumb_base"/>
+		<child link="Right_index_L1"/>
+		<origin xyz = " 9.49e-3 -13.04e-3 -62.95e-3 " rpy = " -1.1595426535897932 1.284473 -1.0510016535897932 " />
+		<axis xyz="0 0 1"/>
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+	</joint>
+	<joint name="Right_index_q2" type="revolute">
+		<parent link="Right_index_L1"/>
+		<child link="Right_index_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000e-3" rpy = "0 0 0.084474"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<mimic joint = "index_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Right_index_anchor"/>
+	<joint name="Right_idx_anchor" type="fixed">
+		<parent link = "Right_index_L2"/>
+		<child link="Right_index_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+	
+
+	<link name="Right_middle_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		
+		<visual name="middle_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<link name="Right_middle_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>
+		<visual name="middle_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="Right_middle_q1" type="revolute">
+		<parent link="Right_thumb_base"/>
+		<child link="Right_middle_L1"/>
+		<origin xyz = " -9.653191e-3 -15.310271e-3 -67.853949e-3 " rpy = " -1.2810616535897934 1.308458 -1.2453756535897933 " />
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+	</joint>
+	<joint name="Right_middle_q2" type="revolute">
+		<parent link="Right_middle_L1"/>
+		<child link="Right_middle_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000" rpy = "0 0 0.084474"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<mimic joint = "middle_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Right_middle_anchor"/>
+	<joint name="Right_mid_anchor" type="fixed">
+		<parent link = "Right_middle_L2"/>
+		<child link="Right_middle_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+	<link name="Right_ring_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		
+		<visual name="ring_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+	</link>
+	<link name="Right_ring_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>
+		<visual name="ring_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>		
+	</link>
+	<joint name="Right_ring_q1" type="revolute">
+		<parent link="Right_thumb_base"/>
+		<child link="Right_ring_L1"/>
+		<origin xyz = " -29.95426e-3 -14.212492e-3 -67.286105e-3 " rpy = " -1.424994653589793 1.321452 -1.4657306535897934 " />
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+	</joint>
+	<joint name="Right_ring_q2" type="revolute">
+		<parent link="Right_ring_L1"/>
+		<child link="Right_ring_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000" rpy = "0 0 0.084474"/>
+		<axis xyz="0 0 1"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<mimic joint = "ring_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Right_ring_anchor"/>
+	<joint name="Right_rng_anchor" type="fixed">
+		<parent link = "Right_ring_L2"/>
+		<child link="Right_ring_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+	<link name="Right_pinky_L1" >
+		<inertial>
+			<mass value = "0.00635888"/>
+			<inertia ixx="0.29766e-6" ixy = "-0.06447133e-6" ixz = "-0.00423315e-6" iyy = "3.6947967e-6" iyz = "0.00083028e-6" izz = "3.8176336e-6" />
+			<origin xyz = "22.41911e-3 -0.15798201e-3 -0.01319866e-3" rpy = "0 0 0"/>
+		</inertial>
+		
+		<visual name="pinky_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f1.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<link name="Right_pinky_L2" >
+		<inertial>
+			<mass value = "0.00645"/>
+			<inertia ixx="0.82671e-6" ixy = "-1.08876e-6" ixz = "-0.00037e-6" iyy = "1.98028e-6" iyz = "0.00081e-6" izz = "2.64638e-6" />
+			<origin rpy = "0 0 0" xyz = "13.36818e-3 -8.75392e-3 -0.02886e-3"/>
+		</inertial>
+		<visual name="pinky_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/idx-f2.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<joint name="Right_pinky_q1" type="revolute">
+		<parent link="Right_thumb_base"/>
+		<child link="Right_pinky_L1"/>
+		<origin xyz = " -49.521293e-3 -11.004583e-3 -63.029065e-3 " rpy = " -1.3764826535897934 1.32222 -1.4832096535897932 " />
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+	</joint>
+	<joint name="Right_pinky_q2" type="revolute">
+		<parent link="Right_pinky_L1"/>
+		<child link="Right_pinky_L2"/>
+		<origin xyz = "38.472723e-3 3.257695e-3 0.000000" rpy = "0 0 0.084474"/>
+		<limit lower = "0.0" upper = "2.6586" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+		<axis xyz="0 0 1"/>
+		<mimic joint = "pinky_q1" multiplier =  "1.05851325" offset = "0.72349796"/>
+	</joint>
+	<link name="Right_pinky_anchor"/>
+	<joint name="Right_pnky_anchor" type="fixed">
+		<parent link = "Right_pinky_L2"/>
+		<child link="Right_pinky_anchor"/>
+		<origin rpy = "0 0 0" xyz = "31.5541e-3  -10.44e-3 0.14e-3"/>
+	</joint>
+
+	<link name="Right_thumb_L1" >
+		<inertial>
+			<mass value = "0.00268342"/>
+			<inertia ixx="0.16931e-6" ixy = "-0.076214e-6" ixz = "-0.16959148e-6" iyy = "0.77769934e-6" iyz = "0.0156622e-6" izz = "0.7249122e-6" />
+			<origin rpy = "0 0 0" xyz = "14.606e-3 -1.890854e-3 -3.1155356e-3"/>
+		</inertial>
+		
+		<visual name="thumb_mesh_1">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/thumb-f1-mir.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<link name="Right_thumb_L2" >
+		<inertial>
+			<mass value = "0.0055"/>
+			<inertia ixx="4.4789082e-6" ixy = "4.4789082e-6" ixz = "-0.62144934e-6" iyy = "15.600996e-6" iyz = "-0.07466143e-6" izz = "17.908554e-6" />
+			<origin rpy = "0 0 0" xyz = "30.020522e-3 5.59476e-3 -4.1504356e-3"/>
+		</inertial>
+		
+		<visual name="thumb_mesh_2">
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<mesh filename="package://ability-hand-description/models/thumb-f2-right.obj"/>
+			</geometry>
+		</visual>
+		
+	</link>
+	<joint name="Right_thumb_q1" type="revolute">
+		<parent link="Right_thumb_base"/>
+		<child link="Right_thumb_L1"/>
+		<origin xyz = " 0.0 0.0 0.0 " rpy = " 3.141592653589793 -0.0 -0.18884434641020664 " />
+		<axis xyz="0 0 1"/>
+		<limit lower = "-2.0943951" upper = "0" effort = "1.2" velocity = "40.338888721"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->
+	</joint>
+	<joint name="Right_thumb_q2" type="revolute">
+		<parent link="Right_thumb_L1"/>
+		<child link="Right_thumb_L2"/>
+		<origin xyz = " 27.8283501e-3 1.7436510745838653e-19 14.7507e-3 " rpy = " 1.832595714594045 -0.0 5.366520605522463e-18 " />
+		<axis xyz="0 0 1"/>
+		<limit lower = "0" upper = "2.0943951" effort = "6.0" velocity = "8.0677777442"/>		<!-- angles in rad, efforts in N-m, velocity in rad/s -->
+		<dynamics damping = "0.001" friction = "0.001" />	<!-- Friction coefficient is not from quantitative measurement -->		
+	</joint>
+	<link name="Right_thumb_anchor"/>
+	<joint name="Right_thmb_anchor" type="fixed">
+		<parent link = "Right_thumb_L2"/>
+		<child link="Right_thumb_anchor"/>
+		<origin rpy = "0 0 0" xyz = "52.00122724e-3 28.00869333e-3 6.98483578e-3"/>
+	</joint>
+	<!-- End of Right Psyonic Ability Hand -->
+</robot>
